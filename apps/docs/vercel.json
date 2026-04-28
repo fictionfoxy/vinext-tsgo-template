@@ -1,5 +1,4 @@
 {
   "buildCommand": "cd ../.. && pnpm turbo build --filter=@typedframe/docs",
-  "installCommand": "cd ../.. && pnpm install",
-  "outputDirectory": "out"
+  "installCommand": "cd ../.. && pnpm install"
 }
