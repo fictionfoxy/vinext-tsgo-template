@@ -1,0 +1,32 @@
+{
+    "permissions": {
+        "allow": [
+            "Shell(git status*)",
+            "Shell(git diff*)",
+            "Shell(git log*)",
+            "Shell(git show*)",
+            "Shell(git add*)",
+            "Shell(git commit -m*)",
+            "Shell(git push origin*)",
+            "Shell(git fetch*)",
+            "Shell(git pull*)",
+            "Shell(git branch*)",
+            "Shell(git stash*)",
+            "Shell(vercel *)",
+            "Shell(pnpm *)"
+        ],
+        "deny": [
+            "Shell(git push *--force*)",
+            "Shell(git push *-f*)",
+            "Shell(git push *-f)",
+            "Shell(git reset*)",
+            "Shell(git clean*)",
+            "Shell(git rebase*)",
+            "Shell(git rm*)",
+            "Shell(git branch -D*)",
+            "Shell(git commit --amend*)",
+            "Shell(git filter*)"
+        ]
+    },
+    "approvalMode": "allowlist"
+}
