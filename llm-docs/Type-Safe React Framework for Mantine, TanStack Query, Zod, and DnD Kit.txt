@@ -1,0 +1,645 @@
+﻿Type-Safe React Framework for Mantine, TanStack Query, Zod, and DnD Kit
+White Paper and Implementation Documentation
+Abstract
+Modern React applications often accumulate a pileup of small, incompatible abstractions: one library for forms, another for data fetching, another for drag and drop, and a separate vocabulary for domain identity. The result is usually a brittle application that feels flexible on paper but behaves like a glass bridge when requirements shift.
+This project addresses that fracture point by designing a thin, type-safe framework layer that unifies a practical stack: Mantine for UI and forms, TanStack Query for server-state management, Zod for schema validation, Axios for transport, and DnD Kit for controlled sortable interactions. The goal is not to replace these libraries. The goal is to make them cooperate without turning the project into a cathedral of abstraction.
+At the center of the design are two core domain primitives: a branded Id type and a lightweight Rank model. Around those primitives, the framework provides small, composable hooks and utilities for sortable collections, validated forms, query-driven data loading, and one carefully chosen advanced workflow: autosave.
+This document explains the need, rationale, architecture, APIs, usage patterns, and integration strategy for the framework. It is written as if the project has already been implemented and is ready for publication on a website and GitHub repository.
+________________
+
+
+1. Why this framework exists
+The problem
+Most React codebases do not fail because of one giant mistake. They fail because of dozens of tiny ones:
+* IDs are passed around as raw strings until one day a wrong entity is deleted.
+* Sorting logic lives half in the UI and half in utility code.
+* Forms validate in one place, submit in another, and drift from the schema that supposedly defines them.
+* Data fetching is wrapped so many times that nobody can tell where caching, retries, or errors actually live.
+* Drag-and-drop components become state managers, renderers, and reorder engines at once.
+These issues are not dramatic individually. Together, they create a codebase that is difficult to evolve, difficult to test, and far too eager to punish junior teams with invisible complexity.
+The need
+The framework is designed for teams that need:
+* strong compile-time guidance without sacrificing runtime simplicity,
+* reusable primitives instead of giant opinionated components,
+* a coherent data flow between forms, queries, and interactions,
+* a small dependency footprint that uses libraries for what they are best at, without wrapping them into obscurity.
+What this solves
+The framework solves four recurring problems:
+1. Identity safety: branded IDs reduce accidental cross-entity mixups.
+2. Ordering safety: rank-based sorting gives stable, explicit ordering semantics.
+3. Form consistency: Mantine forms and Zod schemas remain aligned.
+4. Workflow consistency: TanStack Query, Axios, and autosave fit together with minimal ceremony.
+The framework is not trying to be a “full platform.” It is a disciplined spine. Thin bones, strong posture.
+________________
+
+
+2. Design principles
+2.1 Thin abstractions only
+Every abstraction must justify itself by being used at least twice. If it is only needed once, it is probably a local helper and not a framework feature.
+2.2 Controlled components by default
+The parent owns the state. Child components emit intent. This keeps rendering, state transitions, and data persistence easier to reason about.
+2.3 Domain types first
+A framework becomes useful when it models the problem domain. Here, the problem domain begins with identity, ordering, validation, and server state. The framework is built around those concepts instead of around visual widgets.
+2.4 Composition over subtype explosion
+Autosave, retry policies, validation behaviors, and modal workflows are not separate “form types.” They are behaviors that should be composed with hooks and helpers.
+2.5 Use the library, do not imitate it
+Mantine, TanStack Query, Zod, Axios, and DnD Kit already solve specific problems well. This project does not reimplement them. It wraps the seams between them.
+________________
+
+
+3. High-level architecture
+The codebase is organized around a few major domains:
+src/
+  core/
+    types/
+    utils/
+  data/
+  form/
+  sortable/
+  examples/
+
+
+Core
+Contains identity, ranking, comparison, and reusable helpers.
+Data
+Contains Axios configuration, query helpers, and domain-level server-state utilities.
+Form
+Contains a thin integration layer for Mantine forms and Zod schemas.
+Sortable
+Contains headless and controlled components for sortable lists built on DnD Kit.
+Examples
+Contains end-to-end demos that demonstrate how the framework is used in practice.
+This structure intentionally avoids deep nesting. Deep folder trees often feel “architectural” while actually serving as a future tax bill.
+________________
+
+
+4. Core primitives
+4.1 Branded IDs
+The framework’s Id type is a branded string, which gives the compiler enough information to distinguish between logical entity types even though runtime values remain strings.
+API schema
+export type Id<T extends string> = string & { readonly __brand: T };
+
+
+export function createId<T extends string>(value: string): Id<T>;
+export function isSameId<T extends string>(a: Id<T>, b: Id<T>): boolean;
+
+
+Purpose
+This design allows the following distinctions:
+* Id<'User'> is not interchangeable with Id<'Project'>.
+* IDs remain serializable.
+* Equality remains a simple runtime string comparison.
+Example
+const userId = createId<'User'>('usr_123');
+const projectId = createId<'Project'>('prj_456');
+
+
+isSameId(userId, userId); // true
+// isSameId(userId, projectId) is a type error
+
+
+Rationale
+This is a compile-time guardrail, not a runtime security system. It prevents accidental cross-domain usage without introducing opaque object wrappers or complex identity classes.
+Why this matters
+Junior codebases often start with “just strings” and end with one deleted record that nobody can explain. Branding is a small investment that pays for itself by making impossible states harder to express.
+________________
+
+
+4.2 Rank
+Rank is intentionally simple. The framework uses a numeric ordering model as the default.
+API schema
+export type Rank = number;
+
+
+export function compareRank(a: Rank, b: Rank): number;
+
+
+Example
+compareRank(10, 20); // -10
+compareRank(20, 10); // 10
+compareRank(10, 10); // 0
+
+
+Rationale
+Rank systems can become elaborate very quickly. There are clever approaches such as string-based ranking schemes and sparse ordering algorithms. This framework does not start there. It starts with a simple numeric rank because it is easy to understand, easy to test, and sufficient for a large class of internal tools and product UIs.
+Design choice
+The framework assumes a single ranking strategy at first. Additional strategies can be introduced later through adapters, not by forcing every user to learn a ranking dialect on day one.
+________________
+
+
+5. Sortable collections
+Sortable behavior is modeled as a data concern first and a UI concern second.
+5.1 Sort model
+API schema
+export type SortableItem<T extends string, V = unknown> = {
+  id: Id<T>;
+  rank: Rank;
+  value: V;
+};
+
+
+export function sortItems<T extends string, V>(items: SortableItem<T, V>[]): SortableItem<T, V>[];
+
+
+Example
+const items = [
+  { id: createId<'Task'>('a'), rank: 20, value: { title: 'Second' } },
+  { id: createId<'Task'>('b'), rank: 10, value: { title: 'First' } },
+];
+
+
+const ordered = sortItems(items);
+
+
+Rationale
+Sorting should not depend on UI state. The data model owns order, and the view renders that order. This separation makes it easier to persist, test, and synchronize ordering across components or screens.
+________________
+
+
+5.2 Controlled sortable list
+The sortable UI is designed as a controlled component.
+API schema
+export type SortableListProps<T extends string, V> = {
+  items: SortableItem<T, V>[];
+  onReorder: (nextItems: SortableItem<T, V>[]) => void;
+  renderItem: (item: SortableItem<T, V>) => React.ReactNode;
+};
+
+
+export function SortableList<T extends string, V>(props: SortableListProps<T, V>): JSX.Element;
+
+
+Usage example
+<SortableList
+  items={tasks}
+  onReorder={setTasks}
+  renderItem={(task) => <TaskRow task={task.value} />}
+/>
+
+
+How it works
+* DnD Kit handles pointer interaction, drag state, and collision logic.
+* The framework translates drag results into a reordered array.
+* The parent component receives the new sequence and decides what to do with it.
+Why controlled matters
+A controlled list is easier to debug than a component that hides its own state. Hidden state is where reorder bugs go to breed.
+What this does not do
+It does not decide how items are stored. It does not decide whether ranks are persisted immediately or deferred. It does not generate business logic for item insertion.
+Those choices remain with the application.
+________________
+
+
+6. Form system
+The form layer provides a thin bridge between Mantine Form and Zod.
+6.1 Schema-first validation
+The framework treats Zod as the source of truth for validation rules.
+API schema
+export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T): MantineForm<T>;
+
+
+Example
+const schema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+});
+
+
+const form = useZodForm(schema, {
+  name: '',
+  email: '',
+});
+
+
+Usage
+<TextInput label="Name" {...form.getInputProps('name')} />
+<TextInput label="Email" {...form.getInputProps('email')} />
+
+
+Rationale
+The framework avoids a split-brain form model where the UI uses one set of rules and the backend uses another. Zod becomes the shared contract for shape and validation.
+Design choice
+The wrapper returns the underlying form object rather than a custom component tree. This keeps the framework flexible and avoids locking teams into an opinionated field renderer.
+________________
+
+
+6.2 Form behavior philosophy
+The framework intentionally avoids trying to become a form builder.
+It does not attempt to:
+* generate every field automatically,
+* serialize arbitrary nested workflows into one universal pattern,
+* own modal state,
+* own submission policy for every screen.
+Instead, it provides a reliable validation and input binding layer that fits naturally into Mantine.
+________________
+
+
+7. Autosave
+Autosave is the single advanced behavior included in the framework because it solves a real production problem without multiplying conceptual weight too much.
+API schema
+export type UseAutosaveOptions<T> = {
+  values: T;
+  isDirty: boolean;
+  isValid: boolean;
+  onSave: (values: T) => Promise<void> | void;
+  delay?: number;
+};
+
+
+export function useAutosave<T>(options: UseAutosaveOptions<T>): void;
+
+
+Example
+useAutosave({
+  values: form.values,
+  isDirty: form.isDirty(),
+  isValid: form.isValid(),
+  onSave: async (values) => saveProfile(values),
+  delay: 500,
+});
+
+
+Behavioral model
+* The hook watches form values.
+* It waits for a debounce window.
+* It only saves when the form is dirty and valid.
+* It sends the latest stable state to the application’s save function.
+Rationale
+Autosave is useful, but it is easy to get wrong. By limiting the implementation to one behavior, the framework avoids becoming a generic “behavior zoo.”
+Risks handled by the design
+* saving invalid intermediate states,
+* racing multiple async writes,
+* confusing user feedback,
+* accidentally writing on every keystroke.
+Why this belongs here
+Autosave naturally combines form state and data persistence. It is a seam, not a separate subsystem.
+________________
+
+
+8. Data layer
+The data layer bridges network transport and server-state management.
+8.1 Axios client
+API schema
+export const api = axios.create({
+  baseURL: '/api',
+});
+
+
+Rationale
+Axios is used as a transport wrapper because it provides a familiar request API, request/response interception when needed, and a clean path for shared configuration.
+The framework keeps this layer thin. It does not bury every network concern inside interceptors.
+________________
+
+
+8.2 Query hooks
+TanStack Query remains the source of truth for cache, loading state, retries, and invalidation.
+API schema
+export function useItems<T>(): UseQueryResult<T[]>;
+export function useItem<T>(id: Id<string>): UseQueryResult<T>;
+export function useUpdateItem<TInput, TOutput>(): UseMutationResult<TOutput, Error, TInput>;
+
+
+Example
+export function useItems() {
+  return useQuery({
+    queryKey: ['items'],
+    queryFn: () => api.get('/items').then((r) => r.data),
+  });
+}
+
+
+Rationale
+TanStack Query is already an opinionated cache and synchronization engine. The framework treats it that way. It does not wrap away its strengths by inventing a redundant second layer of caching semantics.
+How it interacts with the app
+The application can:
+* use query keys for invalidation,
+* trigger mutations from form submit handlers,
+* connect autosave to mutation functions,
+* compose server data with sortable and form state.
+________________
+
+
+9. Integration with other frameworks
+9.1 Mantine
+Mantine provides the visual component system and the form state API. The framework does not replace Mantine. It leans on Mantine for input rendering and standard UI patterns while adding type-safe wrappers around the parts most likely to drift.
+What Mantine contributes
+* fast UI composition,
+* familiar inputs,
+* form state hooks,
+* enough flexibility to avoid boxed-in design.
+What the framework contributes
+* schema-backed validation integration,
+* type-safe domain primitives,
+* behavior hooks that fit Mantine’s form model.
+________________
+
+
+9.2 Zod
+Zod is the validation and schema backbone.
+Role
+* validates input shape,
+* documents expected data structures,
+* powers TypeScript inference,
+* acts as a contract between UI and server.
+Why Zod instead of duplicating types
+Duplicating schemas and interfaces tends to create divergence. Zod gives the framework one central source of truth for form data and many shared DTOs.
+________________
+
+
+9.3 TanStack Query
+TanStack Query manages server state, request lifecycle, caching, and synchronization.
+Role
+* fetches data,
+* caches results,
+* tracks loading and error states,
+* supports mutations,
+* handles invalidation.
+Why not hide it behind a huge abstraction
+Because users should still recognize query keys, mutation functions, and cache boundaries. The framework should clarify those concepts, not bury them in magic.
+________________
+
+
+9.4 DnD Kit
+DnD Kit powers controlled drag and drop.
+Role
+* pointer and keyboard drag behavior,
+* sortable list mechanics,
+* collision and sensor logic.
+Framework strategy
+The framework keeps DnD Kit visible in the architecture but narrows the repetitive plumbing around it.
+________________
+
+
+10. Example end-to-end workflow
+This section shows how the pieces fit together in a single screen.
+Scenario
+A user opens a task board:
+* tasks are fetched from the server,
+* tasks are shown in a sortable list,
+* the user edits task details in a form,
+* changes autosave after a short idle delay.
+Flow
+1. useItems() fetches the current list.
+2. SortableList renders the task sequence.
+3. useZodForm() binds a task edit form to a Zod schema.
+4. useAutosave() saves edits when the form becomes stable.
+5. useUpdateItem() performs the mutation.
+6. TanStack Query invalidates the relevant cache key.
+Example pseudocode
+function TaskEditor() {
+  const { data: tasks = [] } = useItems();
+  const updateTask = useUpdateTask();
+
+
+  const form = useZodForm(taskSchema, tasks[0]);
+
+
+  useAutosave({
+    values: form.values,
+    isDirty: form.isDirty(),
+    isValid: form.isValid(),
+    delay: 600,
+    onSave: (values) => updateTask.mutateAsync(values),
+  });
+
+
+  return (
+    <div>
+      <SortableList
+        items={tasks}
+        onReorder={setTasks}
+        renderItem={(task) => <TaskRow task={task.value} />}
+      />
+
+
+      <TextInput {...form.getInputProps('title')} />
+    </div>
+  );
+}
+
+
+Why this workflow is important
+It proves the system is more than a pile of helpers. The parts cooperate.
+________________
+
+
+11. Public API surface
+The public API is intentionally small.
+Core exports
+export { createId, isSameId } from './core/types/id';
+export type { Id } from './core/types/id';
+export type { Rank } from './core/types/rank';
+export { compareRank } from './core/types/rank';
+
+
+Sortable exports
+export { sortItems } from './sortable/sortItems';
+export { SortableList } from './sortable/SortableList';
+export type { SortableItem, SortableListProps } from './sortable/types';
+
+
+Form exports
+export { useZodForm } from './form/useZodForm';
+
+
+Data exports
+export { api } from './data/api';
+export { useItems } from './data/useItems';
+
+
+Behavior exports
+export { useAutosave } from './form/useAutosave';
+
+
+Documentation principle
+A small public API is easier to understand, easier to version, and easier to keep stable.
+________________
+
+
+12. Implementation strategy
+This framework was implemented in layers so that each layer could be tested independently.
+Phase 1: Core primitives
+* branded IDs,
+* rank comparisons,
+* sorting helpers.
+Phase 2: UI wrappers
+* controlled sortable list,
+* Mantine form bridge,
+* field binding conventions.
+Phase 3: Data integration
+* Axios client,
+* Query hooks,
+* cache invalidation patterns.
+Phase 4: Behavior hooks
+* autosave,
+* validation timing,
+* debounce coordination.
+Phase 5: Demo integration
+* example screen,
+* end-to-end smoke test,
+* documentation and usage samples.
+This sequencing reduces the risk of building abstractions before their actual shape is visible in use.
+________________
+
+
+13. Rationale for the main design decisions
+13.1 Why branded IDs instead of wrapper classes
+Classes would add runtime weight and make serialization more awkward. Branded strings preserve simplicity while still giving the type system useful information.
+13.2 Why a numeric rank first
+It is the smallest useful solution. More advanced ranking can be added later when there is evidence that the simple model is insufficient.
+13.3 Why controlled sortable lists
+Controlled components keep state explicit, which is critical for drag-and-drop flows that are otherwise prone to spooky bugs.
+13.4 Why a thin form wrapper
+Mantine already provides a good form API. Replacing it would create maintenance burden without proportional benefit.
+13.5 Why autosave only
+Because one advanced hook that genuinely solves a frequent problem is more valuable than four half-finished “nice-to-haves.”
+13.6 Why not a full framework
+A full framework invites scope creep, hidden policy, and maintenance debt. This project is intentionally a library of carefully chosen seams.
+________________
+
+
+14. Tradeoffs and limitations
+No architecture is free.
+Tradeoffs accepted
+* The framework does not support every ranking strategy.
+* It does not attempt to unify every form pattern.
+* It does not own backend error modeling completely.
+* It does not hide TanStack Query behind a custom state machine.
+Why these tradeoffs are acceptable
+Because they preserve clarity.
+A system can be advanced and still be teachable. This one chooses teachability first, because the target audience includes small teams and junior developers who need leverage more than ceremony.
+________________
+
+
+15. When the design would go too far
+Some ideas are valid in principle and harmful in practice for this project’s scope.
+Overdesign warning signs
+* introducing multiple ranking strategies before a second real use case exists,
+* building a form builder instead of a form helper,
+* wrapping TanStack Query so tightly that query keys become invisible,
+* adding generalized modal/retry/submission subtypes,
+* making sortable components generic enough to require a type puzzle to use them.
+Rule of thumb
+If a feature requires a new vocabulary before it produces a visible benefit, it is probably too early.
+________________
+
+
+16. Testing strategy
+The testing strategy is lightweight but deliberate.
+Core tests
+* createId returns branded string values.
+* isSameId compares equivalent logical IDs.
+* compareRank orders ascending and descending values correctly.
+* sortItems returns a stable reordered array.
+Integration tests
+* form fields bind and validate through Zod,
+* autosave does not fire on invalid values,
+* query hooks fetch and invalidate as expected,
+* sortable list reorder updates parent state.
+Why this is enough
+The framework is intentionally not a giant behavior engine. It needs confidence, not ceremony.
+________________
+
+
+17. Publishing guidance
+This project is ready to present as:
+* a GitHub repository,
+* a documentation website,
+* an internal design reference,
+* a starter foundation for product teams.
+Suggested repository structure
+README.md
+packages/
+src/
+docs/
+examples/
+
+
+Suggested documentation pages
+* Overview
+* Installation
+* Core Concepts
+* Sortable Lists
+* Forms and Validation
+* Data Fetching
+* Autosave
+* API Reference
+* Migration Notes
+* FAQ
+Suggested README summary
+This should be a small, type-safe React utility framework that combines Mantine, Zod, TanStack Query, Axios, and DnD Kit through thin, composable abstractions.
+________________
+
+
+18. Final assessment
+The project succeeds because it resists the temptation to become everything at once.
+It gives the application:
+* safer identity handling,
+* simpler ordering logic,
+* schema-backed forms,
+* server-state integration,
+* a practical autosave workflow,
+* and a design language that stays legible as the app grows.
+The most important achievement is not that the framework is powerful. It is that it is restrained. That restraint is what makes it usable.
+The result is a small, coherent toolkit that behaves like an instrument panel instead of a maze.
+________________
+
+
+Appendix A: Example public API reference
+// core/types/id.ts
+export type Id<T extends string> = string & { readonly __brand: T };
+export function createId<T extends string>(value: string): Id<T>;
+export function isSameId<T extends string>(a: Id<T>, b: Id<T>): boolean;
+
+
+// core/types/rank.ts
+export type Rank = number;
+export function compareRank(a: Rank, b: Rank): number;
+
+
+// sortable/sortItems.ts
+export type SortableItem<T extends string, V = unknown> = {
+  id: Id<T>;
+  rank: Rank;
+  value: V;
+};
+export function sortItems<T extends string, V>(items: SortableItem<T, V>[]): SortableItem<T, V>[];
+
+
+// form/useZodForm.ts
+export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T): MantineForm<T>;
+
+
+// form/useAutosave.ts
+export function useAutosave<T>(options: UseAutosaveOptions<T>): void;
+
+
+// data/api.ts
+export const api: AxiosInstance;
+
+
+________________
+
+
+Appendix B: Example README intro
+A small, type-safe React framework for Mantine, Zod, TanStack Query, Axios, and DnD Kit.
+It provides branded IDs, simple ranking, controlled sortable lists, schema-driven forms, and a thin data layer with autosave support.
+________________
+
+
+Appendix C: Example installation
+npm install @mantine/core @mantine/form @tanstack/react-query zod axios @dnd-kit/core @dnd-kit/sortable
+
+
+________________
+
+
+Appendix D: Example file list
+src/core/types/id.ts
+src/core/types/rank.ts
+src/core/utils/sort.ts
+src/sortable/SortableList.tsx
+src/form/useZodForm.ts
+src/form/useAutosave.ts
+src/data/api.ts
+src/data/queries.ts
+src/examples/TaskBoard.tsx
