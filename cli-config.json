@@ -13,7 +13,16 @@
             "Shell(git branch*)",
             "Shell(git stash*)",
             "Shell(vercel *)",
-            "Shell(pnpm *)"
+            "Shell(pnpm install --lockfile-only*)",
+            "Shell(pnpm audit*)",
+            "Shell(pnpm audit --fix*)",
+            "Shell(pnpm build*)",
+            "Shell(pnpm dev*)",
+            "Shell(pnpm test*)",
+            "Shell(pnpm typecheck*)",
+            "Shell(pnpm lint*)",
+            "Shell(pnpm format:write*)",
+            "Shell(git tag *)"
         ],
         "deny": [
             "Shell(git push *--force*)",

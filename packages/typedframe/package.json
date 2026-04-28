@@ -7,17 +7,17 @@
   "license": "MIT",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/src/index.d.ts"
     }
   },
   "files": ["dist"],
   "scripts": {
-    "build": "vite build && tsc --emitDeclarationOnly --declaration --declarationDir dist",
+    "build": "vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

@@ -23,9 +23,18 @@ importers:
       '@mantine/core':
         specifier: 9.1.1
         version: 9.1.1(@mantine/hooks@9.1.1(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@mantine/form':
+        specifier: 9.1.1
+        version: 9.1.1(react@19.2.5)
       '@mantine/hooks':
         specifier: 9.1.1
         version: 9.1.1(react@19.2.5)
+      '@tanstack/react-query':
+        specifier: ^5.75.5
+        version: 5.100.6(react@19.2.5)
+      '@typedframe/core':
+        specifier: workspace:*
+        version: link:../../packages/typedframe
       react:
         specifier: ^19.2.0
         version: 19.2.5
@@ -35,6 +44,9 @@ importers:
       react-router-dom:
         specifier: ^7.9.4
         version: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      zod:
+        specifier: ^3.25.0
+        version: 3.25.76
     devDependencies:
       '@testing-library/dom':
         specifier: ^10.4.1

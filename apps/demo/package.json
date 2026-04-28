@@ -15,7 +15,11 @@
   },
   "dependencies": {
     "@mantine/core": "9.1.1",
+    "@mantine/form": "9.1.1",
     "@mantine/hooks": "9.1.1",
+    "@tanstack/react-query": "^5.75.5",
+    "@typedframe/core": "workspace:*",
+    "zod": "^3.25.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.4"
