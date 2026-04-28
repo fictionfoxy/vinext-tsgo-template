@@ -1,5 +1,9 @@
 # TypedFrame Project Rules
 
+## Deployment
+- Always commit and push first, then deploy. Never deploy from uncommitted/unpushed local state.
+- The deploy sequence is: `git add -A` → `git commit` → `git push` → `vercel deploy --prod`
+
 ## Package Management
 - Always follow this exact install sequence:
   1. `pnpm install --lockfile-only` — resolves and writes the lockfile WITHOUT downloading packages
