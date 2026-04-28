@@ -130,5 +130,13 @@ dist
 .pnp.*
 
 .DS_Store
-.pnpm-store/
-.vercel
+# pnpm store
+.pnpm-store/**
+.pnpm/
+
+.vercel/
+.turbo/
+.turbo-build/
+.turbo-build-cache/
+.turbo-build-cache-*/
+.turbo-build-cache-*/
