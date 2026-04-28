@@ -4,6 +4,10 @@
 - Always commit and push first, then deploy. Never deploy from uncommitted/unpushed local state.
 - The deploy sequence is: `git add -A` → `git commit` → `git push` → `vercel deploy --prod`
 
+## Vercel
+- `vercel whoami` → `jonmor2006-1468`
+- Never output API/auth tokens to the console. Use authenticated CLIs, MCPs, or pipe the token directly to the command that needs it — never print or echo it.
+
 ## Git workflow
 - Always run commit, tag, and push as separate commands — never chain them in a single shell call.
 - Sequence: `git commit -m "..."` → `git tag vX.Y.Z` → `git push origin master` → `git push origin --tags`
