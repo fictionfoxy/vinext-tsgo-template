@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm turbo build --filter=@typedframe/demo",
   "installCommand": "pnpm install",
-  "outputDirectory": "apps/demo/dist",
+  "outputDirectory": "dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

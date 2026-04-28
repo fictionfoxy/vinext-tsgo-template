@@ -20,5 +20,5 @@
       "@test-utils": ["./test-utils"]
     }
   },
-  "include": ["src", "test-utils", ".storybook/main.ts", ".storybook/preview.tsx"]
+  "include": ["src", "test-utils"]
 }
