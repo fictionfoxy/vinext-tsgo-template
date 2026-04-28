@@ -1,0 +1,118 @@
+---
+title: API Reference
+---
+
+# API Reference
+
+Complete public API of `@typedframe/core`.
+
+---
+
+## Core
+
+### `Id<T>`
+```ts
+type Id<T extends string> = string & { readonly __brand: T }
+```
+
+### `createId<T>(value)`
+```ts
+function createId<T extends string>(value: string): Id<T>
+```
+
+### `isSameId<T>(a, b)`
+```ts
+function isSameId<T extends string>(a: Id<T>, b: Id<T>): boolean
+```
+
+### `Rank`
+```ts
+type Rank = number
+```
+
+### `compareRank(a, b)`
+```ts
+function compareRank(a: Rank, b: Rank): number // a - b
+```
+
+### `SortableItem<T, V>`
+```ts
+type SortableItem<T extends string, V = unknown> = {
+  id: Id<T>; rank: Rank; value: V
+}
+```
+
+### `sortItems(items)`
+```ts
+function sortItems<T extends string, V>(items: SortableItem<T, V>[]): SortableItem<T, V>[]
+```
+Returns new array sorted by `rank` ascending. Does not mutate input.
+
+---
+
+## Sortable
+
+### `SortableList`
+```tsx
+function SortableList<T extends string, V>(props: SortableListProps<T, V>): JSX.Element
+
+type SortableListProps<T extends string, V> = {
+  items: SortableItem<T, V>[]
+  onReorder: (next: SortableItem<T, V>[]) => void
+  renderItem: (item: SortableItem<T, V>) => React.ReactNode
+}
+```
+
+### `reorderItems(items, activeId, overId)`
+```ts
+function reorderItems<T extends string, V>(
+  items: SortableItem<T, V>[], activeId: string, overId: string
+): SortableItem<T, V>[]
+```
+
+---
+
+## Form
+
+### `useZodForm<T>(schema, initialValues)`
+```ts
+function useZodForm<T extends Record<string, unknown>>(
+  schema: ZodSchema<T>, initialValues: T
+): UseFormReturnType<T>
+```
+
+### `useAutosave<T>(options)`
+```ts
+function useAutosave<T>(options: UseAutosaveOptions<T>): void
+
+type UseAutosaveOptions<T> = {
+  values: T; isDirty: boolean; isValid: boolean
+  onSave: (v: T) => void | Promise<void>; delay?: number
+}
+```
+
+---
+
+## Data
+
+### `api`
+```ts
+const api: AxiosInstance // baseURL defaults to '/api'
+```
+
+### `useItems<T>(endpoint)`
+```ts
+function useItems<T>(endpoint: string): UseQueryResult<T[]>
+```
+
+### `useItem<T>(endpoint, id)`
+```ts
+function useItem<T>(endpoint: string, id: Id<string>): UseQueryResult<T>
+```
+
+### `useUpdateItem<TInput, TOutput>(endpoint, getId)`
+```ts
+function useUpdateItem<TInput, TOutput = TInput>(
+  endpoint: string, getId: (input: TInput) => string
+): UseMutationResult<TOutput, Error, TInput>
+```

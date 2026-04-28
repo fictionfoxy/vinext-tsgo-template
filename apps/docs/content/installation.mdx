@@ -1,0 +1,64 @@
+---
+title: Installation
+---
+
+import { Steps } from 'nextra/components'
+
+# Installation
+
+<Steps>
+
+### Install the package
+
+```sh npm2yarn
+npm install @typedframe/core
+```
+
+### Install peer dependencies
+
+```sh npm2yarn
+npm install @mantine/core @mantine/form @tanstack/react-query zod axios @dnd-kit/core @dnd-kit/sortable
+```
+
+### Wrap your app
+
+```tsx filename="main.tsx"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MantineProvider } from '@mantine/core';
+
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </MantineProvider>
+);
+```
+
+### Configure the API base URL (optional)
+
+```ts filename="main.ts"
+import { api } from '@typedframe/core';
+api.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+```
+
+</Steps>
+
+## Validate env vars with Zod
+
+```ts filename="src/env.ts"
+import { z } from 'zod';
+
+const envSchema = z.object({
+  VITE_API_BASE_URL: z.string().url().optional().default('/api'),
+});
+
+const parsed = envSchema.safeParse(import.meta.env);
+if (!parsed.success) throw new Error('Invalid env vars');
+
+export const env = parsed.data;
+```
+
+Import `./env` as the **first import** in `main.ts` so invalid configuration throws before any rendering begins.

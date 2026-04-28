@@ -1,0 +1,11 @@
+{
+  "index": "Overview",
+  "installation": "Installation",
+  "core-concepts": "Core Concepts",
+  "sortable-lists": "Sortable Lists",
+  "forms": "Forms & Validation",
+  "data-fetching": "Data Fetching",
+  "autosave": "Autosave",
+  "api-reference": "API Reference",
+  "playground": "Playground"
+}

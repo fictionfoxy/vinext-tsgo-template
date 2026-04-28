@@ -1,0 +1,66 @@
+---
+title: Core Concepts
+---
+
+import { Callout } from 'nextra/components'
+
+# Core Concepts
+
+TypedFrame is built on two domain primitives: **branded IDs** and **numeric ranks**.
+
+---
+
+## Branded IDs
+
+```ts
+import { createId, isSameId } from '@typedframe/core';
+import type { Id } from '@typedframe/core';
+
+const userId    = createId<'User'>('usr_123');
+const projectId = createId<'Project'>('prj_456');
+
+isSameId(userId, userId);      // true
+// isSameId(userId, projectId) → compile-time error ✓
+```
+
+`Id<T>` is a branded string — just a string at runtime, a distinct type at compile time. Cross-entity mixups become type errors instead of silent bugs.
+
+<Callout>This is a compile-time guardrail, not a runtime security mechanism.</Callout>
+
+| Export | Description |
+|---|---|
+| `Id<T>` | Branded string type keyed on `T` |
+| `createId<T>(value)` | Cast a raw string to `Id<T>` |
+| `isSameId<T>(a, b)` | Type-safe equality (`a === b`) |
+
+---
+
+## Rank
+
+```ts
+import { compareRank } from '@typedframe/core';
+
+compareRank(10, 20); // -10 → a before b
+compareRank(20, 10); //  10 → b before a
+compareRank(10, 10); //   0 → equal
+```
+
+`Rank` is `number`. Intentionally simple — covers most product UI ordering needs without a custom DSL.
+
+| Export | Description |
+|---|---|
+| `Rank` | `number` alias |
+| `compareRank(a, b)` | Standard comparator (`a - b`) |
+
+---
+
+## SortableItem
+
+```ts
+import type { SortableItem } from '@typedframe/core';
+import { sortItems } from '@typedframe/core';
+
+const sorted = sortItems(items); // new array, never mutates original
+```
+
+`SortableItem<T, V>` ties an `Id<T>`, a `Rank`, and an arbitrary value together. `sortItems` returns a new array sorted by rank ascending.

@@ -1,0 +1,59 @@
+---
+title: Data Fetching
+---
+
+# Data Fetching
+
+TypedFrame provides thin TanStack Query wrappers. Query keys, loading states, and cache invalidation stay visible — not buried behind abstraction.
+
+## Setup
+
+```tsx filename="main.tsx"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { api } from '@typedframe/core';
+
+api.defaults.baseURL = '/api';
+
+root.render(
+  <QueryClientProvider client={new QueryClient()}>
+    <App />
+  </QueryClientProvider>
+);
+```
+
+## Fetch a list
+
+```ts
+import { useItems } from '@typedframe/core';
+
+export function useTasks() {
+  return useItems<Task>('/tasks');
+}
+```
+
+## Fetch one item
+
+```ts
+import { useItem } from '@typedframe/core';
+
+export function useTask(id: Id<'Task'>) {
+  return useItem<Task>('/tasks', id);
+}
+```
+
+## Mutations
+
+```ts
+import { useUpdateItem } from '@typedframe/core';
+
+const updateTask = useUpdateItem<Task>('/tasks', (t) => t.id);
+await updateTask.mutateAsync(updatedTask); // invalidates /tasks cache automatically
+```
+
+## API
+
+| Hook | Query key | Description |
+|---|---|---|
+| `useItems<T>(endpoint)` | `[endpoint]` | Fetch list |
+| `useItem<T>(endpoint, id)` | `[endpoint, id]` | Fetch one item |
+| `useUpdateItem<In, Out>(endpoint, getId)` | — | PUT mutation, invalidates list |

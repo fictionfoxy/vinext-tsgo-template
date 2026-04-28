@@ -4,6 +4,10 @@
 - Always commit and push first, then deploy. Never deploy from uncommitted/unpushed local state.
 - The deploy sequence is: `git add -A` → `git commit` → `git push` → `vercel deploy --prod`
 
+## Git workflow
+- Always run commit, tag, and push as separate commands — never chain them in a single shell call.
+- Sequence: `git commit -m "..."` → `git tag vX.Y.Z` → `git push origin master` → `git push origin --tags`
+
 ## Package Management
 - Always follow this exact install sequence:
   1. `pnpm install --lockfile-only` — resolves and writes the lockfile WITHOUT downloading packages

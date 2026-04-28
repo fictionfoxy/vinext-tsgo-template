@@ -18,7 +18,11 @@
       "flatted": ">=3.4.2",
       "js-yaml": ">=4.1.1",
       "ajv": ">=8.18.0",
-      "@babel/runtime": ">=7.26.10"
+      "@babel/runtime": ">=7.26.10",
+      "uuid": ">=14.0.0",
+      "postcss": ">=8.5.10",
+      "cross-spawn@<6.0.6": ">=6.0.6",
+      "next-mdx-remote@>=4.3.0 <6.0.0": ">=6.0.0"
     }
   },
   "engines": {

@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm turbo build --filter=@typedframe/docs",
+  "installCommand": "pnpm install",
+  "outputDirectory": "apps/docs/out"
+}

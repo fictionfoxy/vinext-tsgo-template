@@ -1,0 +1,48 @@
+---
+title: TypedFrame
+description: A thin, type-safe React framework for Mantine, Zod, TanStack Query, and DnD Kit
+---
+
+import { Callout, Cards, Card } from 'nextra/components'
+
+# TypedFrame
+
+**A thin, type-safe React framework** that unifies Mantine, Zod, TanStack Query, Axios, and DnD Kit through a small set of composable primitives.
+
+<Callout type="info">
+  TypedFrame is a library of carefully chosen seams, not a full platform.
+  Each primitive justifies itself by solving a recurring problem.
+</Callout>
+
+## What it solves
+
+| Problem | TypedFrame primitive |
+|---|---|
+| IDs mixed across entity types | Branded `Id<T>` |
+| Inconsistent item ordering | `Rank` + `sortItems` |
+| Form validation drift from API schema | `useZodForm` |
+| Autosave races and invalid saves | `useAutosave` |
+| Drag-and-drop state leakage | `SortableList` (controlled) |
+| Data fetching boilerplate | `useItems`, `useItem`, `useUpdateItem` |
+
+## Quick example
+
+```tsx
+const form = useZodForm(taskSchema, { title: '', description: '' });
+
+useAutosave({
+  values: form.values,
+  isDirty: form.isDirty(),
+  isValid: form.isValid(),
+  onSave: (values) => updateTask.mutateAsync(values),
+  delay: 600,
+});
+```
+
+## Explore
+
+<Cards>
+  <Card title="Installation →" href="/installation" />
+  <Card title="Core Concepts →" href="/core-concepts" />
+  <Card title="Live Playground →" href="/playground" />
+</Cards>

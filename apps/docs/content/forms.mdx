@@ -1,0 +1,62 @@
+---
+title: Forms & Validation
+---
+
+import { Callout } from 'nextra/components'
+
+# Forms & Validation
+
+`useZodForm` bridges `@mantine/form` and Zod. Zod is the **single source of truth** for validation — no duplicate type definitions.
+
+## Basic usage
+
+```tsx
+import { useZodForm } from '@typedframe/core';
+import { z } from 'zod';
+import { TextInput, Button } from '@mantine/core';
+
+const schema = z.object({
+  name:  z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+});
+
+function ProfileForm() {
+  const form = useZodForm(schema, { name: '', email: '' });
+
+  return (
+    <form onSubmit={form.onSubmit((values) => save(values))}>
+      <TextInput label="Name"  {...form.getInputProps('name')} />
+      <TextInput label="Email" {...form.getInputProps('email')} />
+      <Button type="submit">Save</Button>
+    </form>
+  );
+}
+```
+
+The returned `form` is a standard `@mantine/form` instance — all Mantine form methods work as normal.
+
+## API
+
+```ts
+function useZodForm<T>(
+  schema: ZodSchema<T>,
+  initialValues: T,
+): UseFormReturnType<T>
+```
+
+<Callout>
+  `useZodForm` returns the Mantine form object directly. You keep full control over layout and input components.
+</Callout>
+
+## Nested schemas
+
+```tsx
+const schema = z.object({
+  user: z.object({
+    address: z.object({ city: z.string().min(1) }),
+  }),
+});
+
+// Nested error paths work automatically:
+form.errors['user.address.city']
+```
