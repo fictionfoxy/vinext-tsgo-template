@@ -1,0 +1,31 @@
+# my-app
+
+> A Turborepo monorepo template wiring together React 19, Mantine 9, TanStack Query 5, Zod 3, Vite 8, Vitest 4, tsgo, vinext, Oxlint, Oxfmt, Pagefind, Cursor SDK, and Vercel.
+
+## Overview
+
+- Full-stack React monorepo with a Vite SPA (`apps/web`) and a vinext + Fumadocs docs site (`apps/docs`)
+- Shared UI library in `packages/ui` with typed primitives built on Mantine, Zod forms, TanStack Query hooks, and DnD Kit sortables
+- TypeScript type checking via tsgo (`@typescript/native-preview`) - no `tsc` binary
+- Linting via Oxlint, formatting via Oxfmt - both configured at monorepo root
+- Search powered by Pagefind (static, zero-JS-runtime)
+- One-click Vercel deployment for both apps
+
+## Docs
+
+- [Overview](/)
+- [Installation](/installation)
+- [Core Concepts](/core-concepts)
+- [Forms & Validation](/forms)
+- [Sortable Lists](/sortable-lists)
+- [Data Fetching](/data-fetching)
+- [Autosave](/autosave)
+- [API Reference](/api-reference)
+
+## Source
+
+- `packages/ui` - shared component/hook library (`@my-app/ui`)
+- `packages/tsconfig` - shared TypeScript configs (`@my-app/tsconfig`)
+- `apps/web` - Vite + React Router SPA (`@my-app/web`)
+- `apps/docs` - vinext + Fumadocs documentation site (`@my-app/docs`)
+- `scripts/` - Cursor SDK automation scripts (LLM doc generation)

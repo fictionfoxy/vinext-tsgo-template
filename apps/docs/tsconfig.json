@@ -1,0 +1,12 @@
+{
+  "extends": "@my-app/tsconfig/tsconfig.react.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "paths": { "@/*": ["./*"] }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "global.d.ts"],
+  "exclude": ["node_modules", ".vinext", "dist"]
+}

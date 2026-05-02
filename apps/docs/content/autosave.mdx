@@ -1,0 +1,63 @@
+---
+title: Autosave
+---
+
+import { Callout } from 'nextra/components'
+
+# Autosave
+
+`useAutosave` saves automatically after a debounce window — **only when dirty and valid**. It prevents invalid saves, concurrent writes, and keystroke-by-keystroke noise.
+
+## Usage
+
+```tsx
+import { useAutosave, useZodForm } from '@typedframe/core';
+
+function TaskEditor({ task }) {
+  const updateTask = useUpdateTask();
+  const form = useZodForm(taskSchema, task);
+
+  useAutosave({
+    values:  form.values,
+    isDirty: form.isDirty(),
+    isValid: form.isValid(),
+    delay:   600,
+    onSave:  (values) => updateTask.mutateAsync({ ...task, ...values }),
+  });
+
+  return <TextInput {...form.getInputProps('title')} />;
+}
+```
+
+## Options
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `values` | `T` | — | Values to watch |
+| `isDirty` | `boolean` | — | Has unsaved changes |
+| `isValid` | `boolean` | — | Passes validation |
+| `onSave` | `(v: T) => void \| Promise<void>` | — | Save function |
+| `delay` | `number` | `500` | Debounce delay (ms) |
+
+## Behaviour
+
+```
+user types → isDirty: true
+           → wait delay ms with no changes
+           → isValid? if false → skip
+           → onSave() in flight? → skip (no race)
+           → call onSave(values)
+```
+
+<Callout type="warning">
+  `useAutosave` does not show a "saving" indicator. Use `useMutation.isPending` from TanStack Query to drive UI feedback.
+</Callout>
+
+## Reset after save
+
+```ts
+onSave: async (values) => {
+  const saved = await updateTask.mutateAsync(values);
+  form.resetDirty(saved); // clears dirty flag until next edit
+}
+```

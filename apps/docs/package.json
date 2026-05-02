@@ -1,0 +1,34 @@
+{
+  "name": "@my-app/docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vinext dev",
+    "build": "vinext build",
+    "postbuild": "pagefind --site dist --output-path public/_pagefind",
+    "start": "vinext start",
+    "typecheck": "tsgo --noEmit",
+    "lint": "oxlint --config ../../oxlint.config.ts ."
+  },
+  "dependencies": {
+    "fumadocs-core": "^15.0.0",
+    "fumadocs-mdx": "^11.0.0",
+    "fumadocs-ui": "^15.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vinext": "latest"
+  },
+  "devDependencies": {
+    "@my-app/tsconfig": "workspace:*",
+    "@typescript/native-preview": "latest",
+    "@types/node": "^25.0.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@vitejs/plugin-rsc": "latest",
+    "nitro": "latest",
+    "oxlint": "^1.58.0",
+    "pagefind": "^1.3.0",
+    "vite": "^8.0.5"
+  }
+}

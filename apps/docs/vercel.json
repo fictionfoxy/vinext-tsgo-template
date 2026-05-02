@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cd ../.. && pnpm turbo build --filter=@my-app/docs",
+  "installCommand": "cd ../.. && pnpm install"
+}

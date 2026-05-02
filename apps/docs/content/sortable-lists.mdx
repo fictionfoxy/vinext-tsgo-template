@@ -1,0 +1,55 @@
+---
+title: Sortable Lists
+---
+
+import { Callout } from 'nextra/components'
+
+# Sortable Lists
+
+`SortableList` is a **controlled** drag-and-drop list built on DnD Kit. The parent owns the order — the component only emits reorder events.
+
+## Basic usage
+
+```tsx
+import { SortableList } from '@typedframe/core';
+
+function TaskList() {
+  const [tasks, setTasks] = useState(initialTasks);
+
+  return (
+    <SortableList
+      items={tasks}
+      onReorder={setTasks}
+      renderItem={(item) => <TaskRow task={item.value} />}
+    />
+  );
+}
+```
+
+`onReorder` receives the full reordered array with updated ranks.
+
+## Props
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `SortableItem<T, V>[]` | Ordered list |
+| `onReorder` | `(next: SortableItem<T, V>[]) => void` | Called after drag ends |
+| `renderItem` | `(item: SortableItem<T, V>) => ReactNode` | Row renderer |
+
+## How reordering works
+
+`reorderItems` moves the dragged item and redistributes ranks as `10, 20, 30, …`:
+
+```ts
+import { reorderItems } from '@typedframe/core';
+
+const next = reorderItems(items, activeId, overId);
+```
+
+<Callout type="info">
+  Ranks are reassigned on every reorder as evenly-spaced integers. For large lists with concurrent edits, implement fractional ranking and pass the result to `onReorder`.
+</Callout>
+
+## Keyboard support
+
+Both `PointerSensor` and `KeyboardSensor` are enabled out of the box — items are fully reorderable with keyboard navigation.
