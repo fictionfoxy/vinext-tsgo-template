@@ -17,7 +17,7 @@ function readMdxTitles(dir: string): string[] {
 }
 
 const docTitles = readMdxTitles(contentDir);
-const projectName = rootPkg.name ?? 'my-app';
+const projectName = rootPkg.name ?? 'tic-tac-toe';
 
 const prompt = `
 You are generating an llms.txt file for the "${projectName}" project following the llms.txt specification (https://llmstxt.org/).

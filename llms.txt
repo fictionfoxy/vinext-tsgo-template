@@ -1,4 +1,4 @@
-# my-app
+# tic-tac-toe
 
 > A Turborepo monorepo template wiring together React 19, Mantine 9, TanStack Query 5, Zod 3, Vite 8, Vitest 4, tsgo, vinext, Oxlint, Oxfmt, Pagefind, Cursor SDK, and Vercel.
 
@@ -24,8 +24,8 @@
 
 ## Source
 
-- `packages/ui` - shared component/hook library (`@my-app/ui`)
-- `packages/tsconfig` - shared TypeScript configs (`@my-app/tsconfig`)
-- `apps/web` - Vite + React Router SPA (`@my-app/web`)
-- `apps/docs` - vinext + Fumadocs documentation site (`@my-app/docs`)
+- `packages/ui` - shared component/hook library (`@tic-tac-toe/ui`)
+- `packages/tsconfig` - shared TypeScript configs (`@tic-tac-toe/tsconfig`)
+- `apps/web` - Vite + React Router SPA (`@tic-tac-toe/web`)
+- `apps/docs` - vinext + Fumadocs documentation site (`@tic-tac-toe/docs`)
 - `scripts/` - Cursor SDK automation scripts (LLM doc generation)

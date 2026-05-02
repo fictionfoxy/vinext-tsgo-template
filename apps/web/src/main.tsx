@@ -1,5 +1,5 @@
 import './env'; // validate env vars before anything else
-import { api } from '@my-app/ui';
+import { api } from '@tic-tac-toe/ui';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { env } from './env';

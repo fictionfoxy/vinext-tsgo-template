@@ -1,6 +1,6 @@
-# my-app
+# tic-tac-toe
 
-> A production-ready Turborepo monorepo template. Rename `my-app` to your project name using `node scripts/init.mjs`.
+> A production-ready Turborepo monorepo template. Rename `tic-tac-toe` to your project name using `node scripts/init.mjs`.
 
 ## Stack
 
@@ -42,12 +42,12 @@ llms.txt        llms.txt for AI assistants
 Click **Use this template** on GitHub, or clone and run the init script:
 
 ```bash
-git clone https://github.com/my-org/my-app.git
-cd my-app
+git clone https://github.com/FictionFoxy/tic-tac-toe.git
+cd tic-tac-toe
 node scripts/init.mjs
 ```
 
-The init script will prompt for your project name and GitHub URL, replace all `my-app` placeholders, and remove itself.
+The init script will prompt for your project name and GitHub URL, replace all `tic-tac-toe` placeholders, and remove itself.
 
 ### 2. Install dependencies
 
@@ -61,8 +61,8 @@ pnpm install
 
 ```bash
 pnpm dev                          # starts all apps in watch mode
-pnpm dev --filter=@my-app/web    # web app only
-pnpm dev --filter=@my-app/docs   # docs site only
+pnpm dev --filter=@tic-tac-toe/web    # web app only
+pnpm dev --filter=@tic-tac-toe/docs   # docs site only
 ```
 
 ### 4. Type check, lint, test
@@ -85,7 +85,7 @@ pnpm gen:agents   # regenerates llm-docs/AGENTS.md via Cursor SDK
 
 Both apps deploy to Vercel independently. Each has a `vercel.json` that routes the Turbo build through the monorepo root.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmy-org%2Fmy-app)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FFictionFoxy%2Ftic-tac-toe)
 
 ## Renaming the template
 
@@ -93,9 +93,9 @@ All placeholder strings to find/replace:
 
 | Placeholder | Replace with |
 |-------------|-------------|
-| `my-app` | your project slug (e.g. `acme-saas`) |
-| `my-org` | your GitHub org/user |
-| `My App` | your display name |
+| `tic-tac-toe` | your project slug (e.g. `acme-saas`) |
+| `FictionFoxy` | your GitHub org/user |
+| `Tic Tac Toe` | your display name |
 
 Run `node scripts/init.mjs` for an interactive replacement.
 

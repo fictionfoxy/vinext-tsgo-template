@@ -1,5 +1,5 @@
 {
-  "extends": "@my-app/tsconfig/tsconfig.react.json",
+  "extends": "@tic-tac-toe/tsconfig/tsconfig.react.json",
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "dist",

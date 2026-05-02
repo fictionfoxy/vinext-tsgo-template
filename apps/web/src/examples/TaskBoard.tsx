@@ -18,7 +18,7 @@ import {
   sortItems,
   useAutosave,
   useZodForm,
-} from '@my-app/ui';
+} from '@tic-tac-toe/ui';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 

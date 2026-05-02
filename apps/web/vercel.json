@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm turbo build --filter=@my-app/web",
+  "buildCommand": "pnpm turbo build --filter=@tic-tac-toe/web",
   "installCommand": "pnpm install",
   "outputDirectory": "dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]

@@ -1,5 +1,5 @@
 {
-  "name": "@my-app/docs",
+  "name": "@tic-tac-toe/docs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,18 +13,18 @@
   },
   "dependencies": {
     "fumadocs-core": "^15.0.0",
-    "fumadocs-mdx": "^11.0.0",
+    "fumadocs-mdx": "^14.3.2",
     "fumadocs-ui": "^15.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "vinext": "latest"
   },
   "devDependencies": {
-    "@my-app/tsconfig": "workspace:*",
-    "@typescript/native-preview": "latest",
+    "@tic-tac-toe/tsconfig": "workspace:*",
     "@types/node": "^25.0.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
+    "@typescript/native-preview": "latest",
     "@vitejs/plugin-rsc": "latest",
     "nitro": "latest",
     "oxlint": "^1.58.0",

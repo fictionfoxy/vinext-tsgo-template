@@ -5,10 +5,10 @@ import 'fumadocs-ui/style.css';
 
 export const metadata = {
   title: {
-    template: '%s | My App Docs',
-    default: 'My App Docs',
+    template: '%s | Tic Tac Toe Docs',
+    default: 'Tic Tac Toe Docs',
   },
-  description: 'Documentation for My App.',
+  description: 'Documentation for Tic Tac Toe.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -17,8 +17,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <DocsLayout
           tree={source.pageTree}
-          nav={{ title: 'My App' }}
-          githubUrl="https://github.com/my-org/my-app"
+          nav={{ title: 'Tic Tac Toe' }}
+          githubUrl="https://github.com/FictionFoxy/tic-tac-toe"
         >
           {children}
         </DocsLayout>

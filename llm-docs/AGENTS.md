@@ -1989,7 +1989,7 @@ This pattern also applies to `useEffect` when combining unrelated side effects:
 ```tsx
 useEffect(() => {
   analytics.trackPageView(pathname)
-  document.title = `${pageTitle} | My App`
+  document.title = `${pageTitle} | Tic Tac Toe`
 }, [pathname, pageTitle])
 ```
 
@@ -2001,7 +2001,7 @@ useEffect(() => {
 }, [pathname])
 
 useEffect(() => {
-  document.title = `${pageTitle} | My App`
+  document.title = `${pageTitle} | Tic Tac Toe`
 }, [pageTitle])
 ```
 

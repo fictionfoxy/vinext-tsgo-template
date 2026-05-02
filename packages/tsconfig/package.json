@@ -1,5 +1,5 @@
 {
-  "name": "@my-app/tsconfig",
+  "name": "@tic-tac-toe/tsconfig",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
