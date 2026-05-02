@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm turbo build --filter=@my-app/web",
+  "installCommand": "pnpm install",
+  "outputDirectory": "dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

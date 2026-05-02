@@ -1,0 +1,11 @@
+{
+  "extends": "@my-app/tsconfig/tsconfig.react.json",
+  "compilerOptions": {
+    "types": ["node", "@testing-library/jest-dom", "vitest/globals"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@test-utils": ["./test-utils"]
+    }
+  },
+  "include": ["src", "test-utils"]
+}
