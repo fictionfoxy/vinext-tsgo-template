@@ -1,29 +1,35 @@
-import { generateStaticParamsFor, importPage } from 'nextra/pages';
-import { useMDXComponents as getMDXComponents } from '../../mdx-components';
+import type { Metadata } from 'vinext/shims/metadata';
+import { notFound } from 'vinext/shims/navigation';
+import { DocsPage, DocsBody, DocsTitle, DocsDescription } from 'fumadocs-ui/page';
+import { source } from '@/app/source';
 
-export const generateStaticParams = generateStaticParamsFor('mdxPath');
+export async function generateStaticParams() {
+  return source.generateParams();
+}
 
 export async function generateMetadata(props: {
-  params: Promise<{ mdxPath?: string[] }>;
-}) {
+  params: Promise<{ slug?: string[] }>;
+}): Promise<Metadata> {
   const params = await props.params;
-  const { metadata } = await importPage(params.mdxPath);
-  return metadata;
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
+  return { title: page.data.title, description: page.data.description };
 }
 
 export default async function Page(props: {
-  params: Promise<{ mdxPath?: string[] }>;
+  params: Promise<{ slug?: string[] }>;
 }) {
   const params = await props.params;
-  const { default: MDXContent, ...rest } = await importPage(params.mdxPath);
-  const components = getMDXComponents();
-  const Wrapper = components.wrapper;
-  if (!Wrapper) {
-    return <MDXContent {...rest} />;
-  }
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
+  const MDX = page.data.body;
   return (
-    <Wrapper {...rest}>
-      <MDXContent />
-    </Wrapper>
+    <DocsPage toc={page.data.toc} full={page.data.full}>
+      <DocsTitle>{page.data.title}</DocsTitle>
+      <DocsDescription>{page.data.description}</DocsDescription>
+      <DocsBody>
+        <MDX />
+      </DocsBody>
+    </DocsPage>
   );
 }
