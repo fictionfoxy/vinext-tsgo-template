@@ -1,0 +1,7 @@
+{
+  "name": "@my-app/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "files": ["tsconfig.base.json", "tsconfig.react.json", "tsconfig.node.json"]
+}
