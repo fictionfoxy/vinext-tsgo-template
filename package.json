@@ -1,5 +1,5 @@
 {
-  "name": "typedframe",
+  "name": "my-app",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,9 +8,13 @@
     "test": "turbo test",
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
-    "format:write": "turbo format:write"
+    "format:write": "turbo format:write",
+    "gen:llms": "cd scripts && pnpx tsx gen-llms-txt.ts",
+    "gen:agents": "cd scripts && pnpx tsx gen-agents-md.ts",
+    "track:files": "cd scripts && pnpx tsx track-files.ts"
   },
   "devDependencies": {
+    "@cursor/sdk": "latest",
     "turbo": "^2.5.4"
   },
   "pnpm": {
@@ -22,11 +26,19 @@
       "uuid": ">=14.0.0",
       "postcss": ">=8.5.10",
       "cross-spawn@<6.0.6": ">=6.0.6",
-      "next-mdx-remote@>=4.3.0 <6.0.0": ">=6.0.0"
+      "undici@<6.23.0": ">=6.23.0",
+      "tar@<7.5.7": ">=7.5.7",
+      "tar@<=7.5.2": ">=7.5.3",
+      "tar@<7.5.8": ">=7.5.8",
+      "@tootallnate/once@<3.0.1": ">=3.0.1",
+      "tar@<=7.5.9": ">=7.5.10",
+      "tar@<=7.5.10": ">=7.5.11",
+      "undici@<6.24.0": ">=6.24.0",
+      "tar@<=7.5.3": ">=7.5.4"
     }
   },
   "engines": {
-    "node": ">=20",
+    "node": ">=24",
     "pnpm": ">=9"
   },
   "packageManager": "pnpm@10.33.2"
