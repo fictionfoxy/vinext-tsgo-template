@@ -1108,7 +1108,7 @@ you'll see an error indicating the missing configuration:
 To run the program successfully, set the environment variables as shown below:
 
 ```sh showLineNumbers=false
-HOST=localhost PORT=8080 npx tsx primitives.ts
+HOST=localhost PORT=8080 pnpx tsx primitives.ts
 ```
 
 Output:
@@ -1157,7 +1157,7 @@ Effect.runPromise(program)
 Running this program with only the `HOST` environment variable set:
 
 ```sh showLineNumbers=false
-HOST=localhost npx tsx defaults.ts
+HOST=localhost pnpx tsx defaults.ts
 ```
 
 produces the following output:
@@ -1271,7 +1271,7 @@ const program = Effect.gen(function* () {
 
 Effect.runPromise(program)
 // Run:
-// MYARRAY=a,b,c,a npx tsx index.ts
+// MYARRAY=a,b,c,a pnpx tsx index.ts
 // Output:
 // [ 'a', 'b', 'c', 'a' ]
 ```
@@ -1288,7 +1288,7 @@ const program = Effect.gen(function* () {
 
 Effect.runPromise(program)
 // Run:
-// MYSET=a,"b c",d,a npx tsx index.ts
+// MYSET=a,"b c",d,a pnpx tsx index.ts
 // Output:
 // { _id: 'HashSet', values: [ 'd', 'a', 'b c' ] }
 ```
@@ -1305,7 +1305,7 @@ const program = Effect.gen(function* () {
 
 Effect.runPromise(program)
 // Run:
-// MYMAP_A=a MYMAP_B=b npx tsx index.ts
+// MYMAP_A=a MYMAP_B=b pnpx tsx index.ts
 // Output:
 // { _id: 'HashMap', values: [ [ 'A', 'a' ], [ 'B', 'b' ] ] }
 ```
@@ -1347,7 +1347,7 @@ Effect.runPromise(program)
 If we run this program with an invalid `NAME` value:
 
 ```sh showLineNumbers=false
-NAME=foo npx tsx validate.ts
+NAME=foo pnpx tsx validate.ts
 ```
 
 The output will be:
@@ -1495,7 +1495,7 @@ Effect.runPromise(program)
 When you run this program, it will try to retrieve the values for `HOST` and `PORT` from your environment variables:
 
 ```sh showLineNumbers=false
-HOST=localhost PORT=8080 npx tsx App.ts
+HOST=localhost PORT=8080 pnpx tsx App.ts
 ```
 
 If successful, it will print:
@@ -1698,7 +1698,7 @@ Effect.runPromise(
 To match the custom delimiter (`"__"`), set environment variables like this:
 
 ```sh showLineNumbers=false
-SERVER__HOST=localhost SERVER__PORT=8080 npx tsx index.ts
+SERVER__HOST=localhost SERVER__PORT=8080 pnpx tsx index.ts
 ```
 
 Output:
@@ -1764,7 +1764,7 @@ Effect.runPromise(
 Since we defined `"SERVER"` as the namespace, the environment variables must follow this pattern:
 
 ```sh showLineNumbers=false
-SERVER_HOST=localhost SERVER_PORT=8080 npx tsx index.ts
+SERVER_HOST=localhost SERVER_PORT=8080 pnpx tsx index.ts
 ```
 
 Output:
@@ -1801,7 +1801,7 @@ Effect.runPromise(
 Since `constantCase` converts `"Port"` → `"PORT"` and `"Host"` → `"HOST"`, the environment variables must be set as follows:
 
 ```sh showLineNumbers=false
-HOST=localhost PORT=8080 npx tsx index.ts
+HOST=localhost PORT=8080 pnpx tsx index.ts
 ```
 
 Output:
@@ -16588,7 +16588,7 @@ Follow these steps to create a new Effect project for [Node.js](https://nodejs.o
    <TabItem label="npm" icon="seti:npm">
 
    ```sh showLineNumbers=false
-   npx tsc --init
+   pnpx tsc --init
    ```
 
    </TabItem>
@@ -39284,7 +39284,7 @@ npx tsx config.ts
 **Test** (with Invalid Data)
 
 ```sh showLineNumbers=false
-Foo=bar npx tsx config.ts
+Foo=bar pnpx tsx config.ts
 # Output:
 # [(Invalid data at Foo: "a string at least 4 character(s) long
 # └─ Predicate refinement failure
@@ -39294,7 +39294,7 @@ Foo=bar npx tsx config.ts
 **Test** (with Valid Data)
 
 ```sh showLineNumbers=false
-Foo=foobar npx tsx config.ts
+Foo=foobar pnpx tsx config.ts
 # Output:
 # ok: foobar
 ```

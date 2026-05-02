@@ -1,0 +1,17 @@
+{
+  "name": "@my-app/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen:llms": "npx tsx gen-llms-txt.ts",
+    "gen:agents": "npx tsx gen-agents-md.ts",
+    "track:files": "npx tsx track-files.ts"
+  },
+  "devDependencies": {
+    "@cursor/sdk": "latest",
+    "@types/node": "^25.6.0",
+    "@typescript/native-preview": "latest",
+    "tsx": "latest"
+  }
+}
