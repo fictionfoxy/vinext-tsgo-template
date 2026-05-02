@@ -1,41 +1,27 @@
-import { Footer, Layout, Navbar } from 'nextra-theme-docs';
-import { Head } from 'nextra/components';
-import { getPageMap } from 'nextra/page-map';
-import 'nextra-theme-docs/style.css';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { source } from '@/app/source';
 import type { ReactNode } from 'react';
+import 'fumadocs-ui/style.css';
 
 export const metadata = {
-  title: 'TypedFrame',
-  description: 'A thin, type-safe React framework for Mantine, Zod, TanStack Query, and DnD Kit',
+  title: {
+    template: '%s | My App Docs',
+    default: 'My App Docs',
+  },
+  description: 'Documentation for My App.',
 };
 
-const navbar = (
-  <Navbar
-    logo={<strong>TypedFrame</strong>}
-    projectLink="https://github.com/FictionFoxy/TypedFrame"
-  />
-);
-
-const footer = (
-  <Footer>
-    MIT {new Date().getFullYear()} © TypedFrame.
-  </Footer>
-);
-
-export default async function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head />
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Layout
-          navbar={navbar}
-          pageMap={await getPageMap()}
-          docsRepositoryBase="https://github.com/FictionFoxy/TypedFrame/tree/master/apps/docs"
-          footer={footer}
-          sidebar={{ defaultMenuCollapseLevel: 1 }}
+        <DocsLayout
+          tree={source.pageTree}
+          nav={{ title: 'My App' }}
+          githubUrl="https://github.com/my-org/my-app"
         >
           {children}
-        </Layout>
+        </DocsLayout>
       </body>
     </html>
   );
