@@ -12,12 +12,22 @@
 - Always run commit, tag, and push as separate commands — never chain them in a single shell call.
 - Sequence: `git commit -m "..."` → `git tag vX.Y.Z` → `git push origin master` → `git push origin --tags`
 
+## Node.js (nvm)
+- Use **nvm** to pick the Node version: treat the repo **`.nvmrc`** as the source of truth and align with `package.json` `engines.node`. In a shell, run `nvm use` (or `nvm install`) before `pnpm` installs, scripts, or running **oxlint** / **oxfmt** CLIs so `node -v` matches the project.
+- Do not assume the editor’s embedded Node is correct for oxfmt native bindings or other tooling; prefer the nvm-managed Node on your PATH. Oxlint config in this repo is **`oxlint.config.json`** (not TypeScript) so the Oxc extension does not depend on Node’s TypeScript config loader. If the Oxc VS Code/Cursor extension still picks the wrong runtime for other reasons, set `oxc.path.node` in **user** settings to your nvm Node (for example the path from `which node` after `nvm use`), not in committed workspace settings unless the whole team shares the same layout.
+
+## "rem" shorthand
+- When the user says **rem** (remember) something, add it to **`.cursorrules`**, then **continue** with the rest of the same message in that turn (do not stop after updating the rules).
+
 ## Package Management
 - Always follow this exact install sequence:
   1. `pnpm install --lockfile-only` — resolves and writes the lockfile WITHOUT downloading packages
   2. `pnpm audit` — audit the new lockfile against the advisory database
   3. `pnpm audit --fix` — auto-remediate vulnerabilities in the lockfile
   4. Review any remaining unfixed issues manually (add `pnpm.overrides` if needed)
-  5. `pnpm install` — do the actual download now that the lockfile is clean
+  5. `CI=true pnpm install` — do the actual download now that the lockfile is clean (CI=true skips the TTY confirmation prompt for modules dir removal)
 - Never skip the audit step. Online research is supplementary — the audit is mandatory.
 - Always use pnpm instead of npm or yarn.
+
+## NOTES.md
+- When something doesn't work (build failures, broken APIs, version mismatches, etc.), log it in **`NOTES.md`** at the repo root with a timestamp and description before continuing.
