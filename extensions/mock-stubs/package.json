@@ -1,0 +1,117 @@
+{
+  "name": "mock-stubs",
+  "displayName": "Mock Stubs (Cursor SDK)",
+  "description": "Generate mock React hooks/components/utils via @cursor/sdk with git-tracked path context.",
+  "version": "0.0.1",
+  "publisher": "tictactoe",
+  "private": true,
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onView:mockStubsView"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mockStubs.runOnActiveFile",
+        "title": "Mock Stubs: Run on Active File"
+      },
+      {
+        "command": "mockStubs.resetSession",
+        "title": "Mock Stubs: Reset Agent Session"
+      },
+      {
+        "command": "mockStubs.openLogFile",
+        "title": "Mock Stubs: Open Log File"
+      },
+      {
+        "command": "mockStubs.refreshModels",
+        "title": "Mock Stubs: Refresh Model List"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "mockStubsView",
+          "name": "Mock Stubs",
+          "type": "webview",
+          "when": "true"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Mock Stubs",
+      "properties": {
+        "mockStubs.modelId": {
+          "type": "string",
+          "default": "composer-2",
+          "description": "Cursor model id passed to @cursor/sdk (see Cursor.models.list)."
+        },
+        "mockStubs.instructions": {
+          "type": "string",
+          "default": "",
+          "editPresentation": "multiline",
+          "description": "Instructions prepended to every agent message (system-like behavior)."
+        },
+        "mockStubs.theme": {
+          "type": "string",
+          "enum": ["system", "light", "dark"],
+          "default": "system",
+          "description": "Webview color scheme (Mantine)."
+        },
+        "mockStubs.maxRgLines": {
+          "type": "number",
+          "default": 200,
+          "description": "Max lines of ripgrep output injected into context."
+        },
+        "mockStubs.maxGitTrackedFiles": {
+          "type": "number",
+          "default": 120,
+          "description": "Max paths from git-tracked-files.yaml to include (rest summarized)."
+        },
+        "mockStubs.showSubagentRoadmapNote": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show a short note in the view about subagent workflow. Subagents are controlled by **Mock Stubs: Future user subagent mode** (`subagents` vs `singleAgent`)."
+        },
+        "mockStubs.futureUserSubagentMode": {
+          "type": "string",
+          "enum": ["subagents", "singleAgent"],
+          "default": "subagents",
+          "markdownDescription": "Choose `subagents` (five workflow subagents: symbolScanner, placementPlanner, mockImplementer, barrelExports, importCoordinator) or `singleAgent` (no SDK subagent delegation). Changing this value recreates the agent on the next run."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run build",
+    "build": "pnpm run build:webview && pnpm run build:ext",
+    "build:ext": "node esbuild.config.mjs",
+    "build:webview": "vite build",
+    "watch:ext": "node esbuild.config.mjs --watch",
+    "watch:webview": "vite build --watch",
+    "watch": "pnpm run \"/^watch:/\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@types/vscode": "^1.90.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "esbuild": "^0.25.0",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "^5.9.0",
+    "vite": "^8.0.5"
+  },
+  "dependencies": {
+    "@cursor/sdk": "latest",
+    "@mantine/core": "9.1.1",
+    "@mantine/hooks": "9.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "yaml": "^2.8.0"
+  }
+}

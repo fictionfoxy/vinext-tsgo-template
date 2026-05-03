@@ -6,15 +6,15 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
-    "postbuild": "pagefind --site dist --output-path public/_pagefind",
+    "postbuild": "pagefind --site dist --output-path public/_pagefind || true",
     "start": "vinext start",
     "typecheck": "tsgo --noEmit",
     "lint": "oxlint --config ../../oxlint.config.json ."
   },
   "dependencies": {
-    "fumadocs-core": "^15.0.0",
+    "fumadocs-core": "^16.0.0",
     "fumadocs-mdx": "^14.3.2",
-    "fumadocs-ui": "^15.0.0",
+    "fumadocs-ui": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "vinext": "latest"

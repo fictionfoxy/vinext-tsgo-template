@@ -11,10 +11,13 @@
     "format:write": "turbo format:write",
     "gen:llms": "cd scripts && pnpx tsx gen-llms-txt.ts",
     "gen:agents": "cd scripts && pnpx tsx gen-agents-md.ts",
-    "track:files": "cd scripts && pnpx tsx track-files.ts"
+    "track:files": "cd scripts && pnpx tsx track-files.ts",
+    "auditi": "pnpm i --lockfile-only; pnpm audit"
   },
   "devDependencies": {
     "@cursor/sdk": "latest",
+    "oxfmt": "^0.47.0",
+    "oxlint": "^1.62.0",
     "turbo": "^2.5.4"
   },
   "pnpm": {
