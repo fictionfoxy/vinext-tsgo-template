@@ -21,7 +21,7 @@
     "typecheck": "tsgo --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "oxlint --config ../../oxlint.config.ts ."
+    "lint": "oxlint --config ../../oxlint.config.json ."
   },
   "peerDependencies": {
     "@mantine/core": ">=9",

@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsgo --noEmit",
-    "lint": "oxlint --config ../../oxlint.config.ts .",
+    "lint": "oxlint --config ../../oxlint.config.json .",
     "vitest": "vitest run",
     "vitest:watch": "vitest",
     "test": "pnpm typecheck && pnpm vitest && pnpm build"

@@ -9,7 +9,7 @@
     "postbuild": "pagefind --site dist --output-path public/_pagefind",
     "start": "vinext start",
     "typecheck": "tsgo --noEmit",
-    "lint": "oxlint --config ../../oxlint.config.ts ."
+    "lint": "oxlint --config ../../oxlint.config.json ."
   },
   "dependencies": {
     "fumadocs-core": "^15.0.0",
