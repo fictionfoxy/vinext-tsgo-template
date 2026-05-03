@@ -2,27 +2,34 @@
 title: Installation
 ---
 
-import { Steps } from 'nextra/components'
+import { Steps, Step } from 'fumadocs-ui/components/steps'
 
 # Installation
 
 <Steps>
+<Step>
 
 ### Install the package
 
-```sh npm2yarn
+```sh
 npm install @typedframe/core
 ```
 
+</Step>
+<Step>
+
 ### Install peer dependencies
 
-```sh npm2yarn
+```sh
 npm install @mantine/core @mantine/form @tanstack/react-query zod axios @dnd-kit/core @dnd-kit/sortable
 ```
 
+</Step>
+<Step>
+
 ### Wrap your app
 
-```tsx filename="main.tsx"
+```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MantineProvider } from '@mantine/core';
 
@@ -37,13 +44,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
+</Step>
+<Step>
+
 ### Configure the API base URL (optional)
 
-```ts filename="main.ts"
+```ts
 import { api } from '@typedframe/core';
 api.defaults.baseURL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 ```
 
+</Step>
 </Steps>
 
 ## Validate env vars with Zod
